@@ -44,4 +44,8 @@ int main(int argc, char * argv[])
     }
 }
 
+<<<<<<< HEAD
 %kys
+=======
+```ccccc
+>>>>>>> dcc2c20b889a9063970b0ba425ac819b46775c3f
