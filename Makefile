@@ -12,4 +12,6 @@ all: clean build
 
 run:
 	./test_generator.out
+#	./clk.out
 	./process_generator.out
+#	./scheduler.out
