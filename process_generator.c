@@ -3,24 +3,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/wait.h>
-#define SCHEDULER_EXEC "/home/aml-ismail/Desktop/OS_Starter_Code/scheduler.out"
-#define CLK_EXEC "/home/aml-ismail/Desktop/OS_Starter_Code/clk.out"
+#define SCHEDULER_EXEC "/home/youssefmallam/Downloads/OS_Starter_Code/scheduler.out"
+#define CLK_EXEC "/home/youssefmallam/Downloads/OS_Starter_Code/clk.out"
 void clearResources(int);
 
 
 
 
-struct processData 
-{
-    int arrivaltime;
-    int priority;
-    int runningtime;
-    int id;
-};
 
 struct msgbuff{
     long mtype;
-    int mtext;
+    struct processData data;
 };
 
 struct processData priorityQueue[100];
@@ -47,7 +40,23 @@ struct processData removeEarliestArrival() {
         struct processData emptyProcess = {0}; // Return an empty process
         return emptyProcess;
     }
-    return priorityQueue[--queueSize]; // Remove and return the first process
+
+    struct processData earliestProcess = priorityQueue[0]; // Get the first process
+    
+    // Shift all elements to the left
+    for (int i = 1; i < queueSize; i++) {
+        priorityQueue[i - 1] = priorityQueue[i];
+    }
+    
+    queueSize--; // Decrease the queue size
+    return earliestProcess; // Return the first process
+}
+struct processData peekEarliestArrival() {
+    if (queueSize == 0) {
+        struct processData emptyProcess = {0}; // Return an empty process
+        return emptyProcess;
+    }
+    return priorityQueue[0]; // Return the first process without removing it
 }
 
 void read_file(struct processData processes[]){
@@ -81,6 +90,16 @@ void printQueue() {
             priorityQueue[i].runningtime, 
             priorityQueue[i].priority);
     }
+}
+
+void testqueue(){
+    printf("Queue Before:\n");
+    printQueue();
+    printf("%d/n",peekEarliestArrival().id);
+    removeEarliestArrival();
+    printf("Queue After\n");
+    printQueue();
+    printf("%d/n",peekEarliestArrival().id);
 }
 
 int main(int argc, char * argv[])
@@ -151,7 +170,43 @@ int main(int argc, char * argv[])
 
         // TODO Generation Main Loop
         // 5. Create a data structure for processes and provide it with its parameters.
+
         // 6. Send the information to the scheduler at the appropriate time.
+        key_t id;
+        id=ftok("keyfile",1);
+        int msgid, sent;
+        msgid=msgget(id, 0666|IPC_CREAT);
+        if(msgid==-1){
+            perror("Error in creating message queue between process generator and scheduler");
+        }
+        while(queueSize>=0){
+            while(getClk()>peekEarliestArrival().arrivaltime&&peekEarliestArrival().arrivaltime>0){
+                printf("\nin second loop\n");
+                
+                struct processData p1;
+                p1.arrivaltime= peekEarliestArrival().arrivaltime;
+                p1.id=peekEarliestArrival().id;
+                p1.priority=peekEarliestArrival().priority;
+                p1.runningtime=peekEarliestArrival().runningtime;
+                removeEarliestArrival();
+                
+                printf("\nNext Arrival After Removal: %d\n", queueSize > 0 ? peekEarliestArrival().arrivaltime : -1);
+                //send information
+                struct msgbuff message;
+                message.mtype=1;
+                message.data=p1;
+                sent=msgsnd(msgid,&message,sizeof(message.data),!IPC_NOWAIT);
+                if(sent==-1){
+                    perror("Error in send process data from process generator");
+                }
+                else{
+                    printf("message sent");
+                }
+
+            }
+
+        }
+        //DOES NOT TERMINATE
         // 7. Clear clock resources
         destroyClk(true);
         }
