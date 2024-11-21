@@ -11,10 +11,7 @@ void clearResources(int);
 
 
 
-struct msgbuff{
-    long mtype;
-    struct processData data;
-};
+
 
 struct processData priorityQueue[100];
 
@@ -81,7 +78,7 @@ void read_file(struct processData processes[]){
 }
 
 void printQueue() {
-    printf("Current Process Queue:\n");
+    printf("Initial Process Queue:\n");
     printf("ID\tArrival Time\tRunning Time\tPriority\n");
     for (int i = 0; i < queueSize; i++) {
         printf("%d\t%d\t\t%d\t\t%d\n", 
@@ -92,15 +89,6 @@ void printQueue() {
     }
 }
 
-void testqueue(){
-    printf("Queue Before:\n");
-    printQueue();
-    printf("%d/n",peekEarliestArrival().id);
-    removeEarliestArrival();
-    printf("Queue After\n");
-    printQueue();
-    printf("%d/n",peekEarliestArrival().id);
-}
 
 int main(int argc, char * argv[])
 {

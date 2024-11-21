@@ -17,9 +17,9 @@ int main(int agrc, char * argv[])
     arrivaltime=atoi(argv[2]);
     priority=atoi(argv[3]);
     running_time=atoi(argv[4]);
-    printf("New process forked");
+    printf("New process forked\n");
     //TODO it needs to get the remaining time from somewhere
-    //remainingtime = ??;
+    remainingtime = running_time;
     int current;
     while (remainingtime > 0)
     {
@@ -29,6 +29,9 @@ int main(int agrc, char * argv[])
         current=getClk();
         remainingtime = running_time-processedtime;
     }
+    kill(getppid(),SIGUSR1);
+    exit(0);
+
     
     //destroyClk(false);
     
