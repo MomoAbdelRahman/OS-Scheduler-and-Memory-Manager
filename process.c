@@ -13,10 +13,10 @@ bool running=0;
 int main(int agrc, char * argv[])
 {
     initClk();
-    id=(int)argv[1];
-    arrivaltime=(int)argv[2];
-    priority=(int)argv[3];
-    running_time=(int)argv[4];
+    id=atoi(argv[1]);
+    arrivaltime=atoi(argv[2]);
+    priority=atoi(argv[3]);
+    running_time=atoi(argv[4]);
     
     //TODO it needs to get the remaining time from somewhere
     //remainingtime = ??;

@@ -166,13 +166,8 @@ int main(int argc, char * argv[])
 
                 enqueue(currentprocess);
                                  
-                printf("ID:%d\tRemaining Time:%d\n",peek().id,peek().runningtime);        
-                     
-                
-            
-
-            
-                
+                printf("ID:%d\tRemaining Time:%d\n",peek().id,peek().runningtime);
+                //sleep(1);            
             }
 
        

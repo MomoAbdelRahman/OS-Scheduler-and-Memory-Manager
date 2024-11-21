@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/wait.h>
-#define SCHEDULER_EXEC "/home/aml-ismail/Desktop/OS_Starter_Code/scheduler.out"
-#define CLK_EXEC "/home/aml-ismail/Desktop/OS_Starter_Code/clk.out"
+#define SCHEDULER_EXEC "scheduler.out"
+#define CLK_EXEC "clk.out"
 void clearResources(int);
 
 
