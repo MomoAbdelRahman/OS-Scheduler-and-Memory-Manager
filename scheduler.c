@@ -119,6 +119,10 @@ int continue_process(struct processData p1){
     kill(p1.pid,SIGCONT);
 }
 
+
+
+
+
 int main(int argc, char * argv[])
 {
     printf("Scheduling type:%s\nQuantum:%s\n",argv[1],argv[2]);
@@ -133,17 +137,23 @@ int main(int argc, char * argv[])
     }
     struct msgbuff message;
     int scheduling_type=atoi(argv[1]);
-    if(argv[1]=="1"){
+    if(scheduling_type==1){
         //SJF
         while(1){
-        received=msgrcv(msgid, &message, sizeof(message.data), 1,!IPC_NOWAIT);
+        received=msgrcv(msgid, &message, sizeof(message.data), 1,IPC_NOWAIT);
         if(received==-1){
-            printf("error in receiving process data");
+            //printf("Didnt Receive Data from Process generator");
         }
-        printf("received: %d\n",message.data.id);
+        else{
+            printf("received: %d\n",message.data.id);
+            new_process(message.data);
+            stop_process(message.data);
+
+            //
+        }
     }
     }
-    else if(argv[1]=="2"){
+    else if(scheduling_type==2){
         //PHPF
         while(1){
         received=msgrcv(msgid, &message, sizeof(message.data), 1,!IPC_NOWAIT);
