@@ -1,9 +1,57 @@
 #include "headers.h"
-#define PROCESS_EXEC "/home/youssefmallam/Downloads/OS_Starter_Code/process.out"
+#define PROCESS_EXEC "/home/aml-ismail/Desktop/OS_Starter_Code/process.out"
 struct msgbuff{
     long mtype;
     struct processData data;
 };
+
+struct CircularQueue {
+    struct processData rrprocesses[100];
+    int front;
+    int rear;
+};
+
+struct CircularQueue queue;
+
+// Initialize the circular queue
+void initQueue() {
+    queue.front = 0;
+    queue.rear = 0;
+}
+
+int isEmpty() {
+    return queue.front == queue.rear;
+}
+
+int isFull() {
+    return (queue.rear + 1) % 100 == queue.front;
+}
+
+void enqueue(struct processData process) {
+    if (!isFull()) {
+        queue.rrprocesses[queue.rear] = process;
+        queue.rear = (queue.rear + 1) % 100;
+    }
+}
+
+struct processData dequeue() {
+    if (!isEmpty()) {
+        struct processData process = queue.rrprocesses[queue.front];
+        queue.front = (queue.front + 1) % 100;
+        return process;
+    }
+    struct processData emptyProcess = {0}; // Return an empty process if queue is empty
+    return emptyProcess;
+}
+
+struct processData peek() {
+    if (!isEmpty()) {
+        struct processData process = queue.rrprocesses[queue.front];
+        return process;
+    }
+    struct processData emptyProcess = {0}; // Return an empty process if queue is empty
+    return emptyProcess;
+}
 
 struct processData readyqueue[100];
 int q_size=0;
@@ -74,7 +122,7 @@ int main(int argc, char * argv[])
         perror("error in creatting message queue in scheduler");
     }
     struct msgbuff message;
-
+    int scheduling_type=atoi(argv[1]);
     if(argv[1]=="1"){
         //SJF
         while(1){
@@ -95,15 +143,29 @@ int main(int argc, char * argv[])
         printf("received: %d\n",message.data.id);
     }
     }
-    else if(argv[1]=="3"){
+    else if(scheduling_type==3){
         //RR
+        printf("ana gowa 1\n");
+        int quantum=atoi(argv[2]);
         while(1){
-        received=msgrcv(msgid, &message, sizeof(message.data), 1,!IPC_NOWAIT);
-        if(received==-1){
-            printf("error in receiving process data");
-        }
-        printf("received: %d\n",message.data.id);
-    }
+                received=msgrcv(msgid, &message, sizeof(message.data), 1,IPC_NOWAIT);
+                enqueue(message.data);
+                struct processData currentprocess = dequeue(); 
+                                       
+                currentprocess.runningtime=currentprocess.runningtime- quantum;
+
+                enqueue(currentprocess);
+                                 
+                printf("ID:%d\tRemaining Time:%d\n",peek().id,peek().runningtime);        
+                     
+                
+            
+
+            
+                
+            }
+
+       
     }
 
     

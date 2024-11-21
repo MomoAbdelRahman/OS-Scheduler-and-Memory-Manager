@@ -29,7 +29,7 @@ int main(int agrc, char * argv[])
         // remainingtime = ??;
     }
     
-    destroyClk(false);
+    //destroyClk(false);
     
     return 0;
 }
