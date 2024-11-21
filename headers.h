@@ -11,6 +11,8 @@
 #include <unistd.h>
 #include <signal.h>
 
+
+
 typedef short bool;
 #define true 1
 #define false 1
@@ -72,4 +74,5 @@ struct processData
     int priority;
     int runningtime;
     int id;
+    pid_t pid;
 };

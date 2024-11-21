@@ -1,5 +1,6 @@
 #include "headers.h"
 #define PROCESS_EXEC "/home/youssefmallam/Downloads/OS_Starter_Code/process.out"
+
 struct msgbuff{
     long mtype;
     struct processData data;
@@ -51,6 +52,7 @@ int new_process(struct processData p1){
         sprintf(arrival_time, "%d", p1.arrivaltime);
         sprintf(priority,"%d",p1.priority);
         sprintf(running_time,"%d",p1.runningtime);
+        p1.pid=getpid();
         char* arr[]={PROCESS_EXEC,id,arrival_time,priority,running_time, NULL};
         int proccess_init=execv(PROCESS_EXEC,arr);
         if(proccess_init==-1){
@@ -59,6 +61,14 @@ int new_process(struct processData p1){
         }
         return 1;
     }
+}
+
+int stop_process(struct processData p1){
+    kill(p1.pid,SIGSTOP);    
+}
+
+int continue_process(struct processData p1){
+    kill(p1.pid,SIGCONT);
 }
 
 int main(int argc, char * argv[])
