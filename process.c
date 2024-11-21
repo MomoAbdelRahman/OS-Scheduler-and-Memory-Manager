@@ -30,7 +30,7 @@ int main(int agrc, char * argv[])
         remainingtime = running_time-processedtime;
     }
     
-    destroyClk(false);
+    //destroyClk(false);
     
     return 0;
 }

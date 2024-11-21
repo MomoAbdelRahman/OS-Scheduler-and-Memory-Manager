@@ -133,6 +133,7 @@ int main(int argc, char * argv[])
 
     else if(spid==0){
         // char* arr[]={SCHEDULER_EXEC, scheduling_type, quantum, NULL};
+        printf("No Erros\n");
         char strq[20];
         char strs[20];
         sprintf(strq, "%d", quantum);
@@ -208,7 +209,7 @@ int main(int argc, char * argv[])
         }
         //DOES NOT TERMINATE
         // 7. Clear clock resources
-        destroyClk(true);
+        //destroyClk(true);
         }
         
     }
