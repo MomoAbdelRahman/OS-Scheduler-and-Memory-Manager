@@ -167,9 +167,20 @@ int main(int argc, char * argv[])
                 enqueue(currentprocess);
                                  
                 printf("ID:%d\tRemaining Time:%d\n",peek().id,peek().runningtime);        
-        }
+                     
+                
+            
+
+            
+                
+            }
+
+       
+    }
+
+    
     //TODO implement the scheduler :)
     //upon termination release the clock resources
-    }
+
     //destroyClk(true);
 }

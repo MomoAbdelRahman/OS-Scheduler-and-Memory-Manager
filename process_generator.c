@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/wait.h>
-#define SCHEDULER_EXEC "/home/youssefmallam/Downloads/OS_Starter_Code/scheduler.out"
-#define CLK_EXEC "/home/youssefmallam/Downloads/OS_Starter_Code/clk.out"
+#define SCHEDULER_EXEC "/home/aml-ismail/Desktop/OS_Starter_Code/scheduler.out"
+#define CLK_EXEC "/home/aml-ismail/Desktop/OS_Starter_Code/clk.out"
 void clearResources(int);
 
 
@@ -18,7 +18,7 @@ struct msgbuff{
 
 struct processData priorityQueue[100];
 
-int queueSize = 0; 
+int queueSize = 0;
 
 
 void insertProcess(struct processData process) {
