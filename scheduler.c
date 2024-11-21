@@ -47,12 +47,28 @@ int main(int argc, char * argv[])
     }
     else if(scheduling_type==2){
         //PHPF
+        signal (SIGUSR1,handler_phpf);
         while(1){
-        received=msgrcv(msgid, &message, sizeof(message.data), 1,!IPC_NOWAIT);
+        received=msgrcv(msgid, &message, sizeof(message.data), 1,IPC_NOWAIT);
         if(received==-1){
-            printf("error in receiving process data");
+            continue_process(currently_running_phpf);
         }
-        printf("received: %d\n",message.data.id);
+        else{
+            int new_pid=new_process(&message);
+            message.data.pid=new_pid;
+            if(PHPF_PriQSize==0&&currently_running_phpf.id==0){
+                currently_running_phpf=message.data;
+            }
+            else{
+                PHPF_enqueue(message.data);
+                stop_process(message.data);
+                stop_process(currently_running_phpf);
+                PHPF_enqueue(currently_running_phpf);
+                currently_running_phpf=removeHighestPriority();
+                continue_process(currently_running_phpf);
+            }
+            printPHPFQueue();
+        }
     }
     }
     else if(scheduling_type==3){

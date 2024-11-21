@@ -17,7 +17,7 @@ typedef short bool;
 #define true 1
 #define false 1
 
-#define PROCESS_EXEC "/home/youssefmallam/Downloads/OS_Starter_Code/process.out"
+#define PROCESS_EXEC "/home/os/Project/OS_Starter_Code/process.out"
 
 #define SHKEY 300
 
@@ -247,4 +247,77 @@ void printsjfQueue() {
     }
 }
 
+///////////////////////////////PHPF Priority Queue//////////////////////////////////
+
+struct processData PHPF_PriQ[256];
+
+int PHPF_PriQSize = 0; 
+
+struct processData currently_running_phpf;
+
+void PHPF_enqueue(struct processData process) {
+    if (PHPF_PriQSize >= 256) return; // Queue is full
+
+    // Insert process in sorted order based on arrival time
+    int i;
+    for (i = PHPF_PriQSize - 1; (i >= 0 && PHPF_PriQ[i].priority > process.priority); i--) {
+        PHPF_PriQ[i + 1] = PHPF_PriQ[i];
+    }
+    PHPF_PriQ[i + 1] = process; 
+    PHPF_PriQSize++;
+}
+
+
+// Function to remove the process with the highest priority
+struct processData removeHighestPriority() {
+    if (PHPF_PriQSize == 0) {
+        struct processData emptyProcess = {0}; // Return an empty process
+        return emptyProcess;
+    }
+
+    struct processData earliestProcess = PHPF_PriQ[0]; // Get the first process
+    
+    // Shift all elements to the left
+    for (int i = 1; i < PHPF_PriQSize; i++) {
+        PHPF_PriQ[i - 1] = PHPF_PriQ[i];
+    }
+    
+    PHPF_PriQSize--; // Decrease the queue size
+    return earliestProcess; // Return the first process
+}
+struct processData peekHighestPriority() {
+    if (PHPF_PriQSize == 0) {
+        struct processData emptyProcess = {0}; // Return an empty process
+        return emptyProcess;
+    }
+    return PHPF_PriQ[0]; // Return the first process without removing it
+}
+
+void printPHPFQueue() {
+
+    printf("Queue Size:%d Current Clock: %d\n",PHPF_PriQSize, getClk());
+    printf("Current Process Queue:\n");
+    printf("ID\tArrival Time\tRunning Time\tPriority\n");
+    
+    printf("Currently Running\n%d\t%d\t\t%d\t\t%d\n", 
+            currently_running_phpf.id, 
+            currently_running_phpf.arrivaltime, 
+            currently_running_phpf.runningtime, 
+            currently_running_phpf.priority);
+    printf("Waiting:\n");
+    for (int i = 0; i < PHPF_PriQSize; i++) {
+        printf("%d\t%d\t\t%d\t\t%d\n", 
+            PHPF_PriQ[i].id, 
+            PHPF_PriQ[i].arrivaltime, 
+            PHPF_PriQ[i].runningtime, 
+            PHPF_PriQ[i].priority);
+    }
+}
+
+void handler_phpf(int sig_num){
+    struct processData removed=currently_running_phpf;
+    printf("Process %d terminated at time %d\n",removed.id,getClk());
+    signal (SIGUSR1,handler_phpf);
+    currently_running_phpf=removeHighestPriority();
+}
 
