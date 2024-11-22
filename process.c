@@ -17,7 +17,7 @@ int main(int agrc, char * argv[])
     arrivaltime=atoi(argv[2]);
     priority=atoi(argv[3]);
     running_time=atoi(argv[4]);
-    printf("New process forked\n");
+    //printf("New process forked\n");
     //TODO it needs to get the remaining time from somewhere
     remainingtime = running_time;
     int current;
@@ -33,7 +33,7 @@ int main(int agrc, char * argv[])
     exit(0);
 
     
-    //destroyClk(false);
+    destroyClk(false);
     
     return 0;
 }

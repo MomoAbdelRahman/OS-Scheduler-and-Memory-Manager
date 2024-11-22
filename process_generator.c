@@ -168,9 +168,9 @@ int main(int argc, char * argv[])
         if(msgid==-1){
             perror("Error in creating message queue between process generator and scheduler");
         }
-        while(queueSize>=0){
-            while(getClk()>peekEarliestArrival().arrivaltime&&peekEarliestArrival().arrivaltime>0){
-                printf("\nin second loop\n");
+        while(queueSize>0){
+            while(getClk()>peekEarliestArrival().arrivaltime && peekEarliestArrival().arrivaltime>0){
+                //printf("\nin second loop\n");
                 
                 struct processData p1;
                 p1.arrivaltime= peekEarliestArrival().arrivaltime;
@@ -179,7 +179,7 @@ int main(int argc, char * argv[])
                 p1.runningtime=peekEarliestArrival().runningtime;
                 removeEarliestArrival();
                 
-                printf("\nNext Arrival After Removal: %d\n", queueSize > 0 ? peekEarliestArrival().arrivaltime : -1);
+                //printf("\nNext Arrival After Removal: %d\n", queueSize > 0 ? peekEarliestArrival().arrivaltime : -1);
                 //send information
                 struct msgbuff message;
                 message.mtype=1;
@@ -189,15 +189,20 @@ int main(int argc, char * argv[])
                     perror("Error in send process data from process generator");
                 }
                 else{
-                    printf("message sent");
+                    //printf("message sent");
                 }
 
             }
-
         }
-        //DOES NOT TERMINATE
+        kill(spid,SIGUSR2);
+        int status;
+        spid=wait(&status);
+        if(WIFEXITED(status)){
+            printf("Scheduler has terminated with exit code: %d\n",status);
+        }
+
         // 7. Clear clock resources
-        //destroyClk(true);
+        destroyClk(true);
         }
         
     }

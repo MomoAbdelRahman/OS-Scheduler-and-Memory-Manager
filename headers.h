@@ -17,7 +17,7 @@ typedef short bool;
 #define true 1
 #define false 1
 
-#define PROCESS_EXEC "/home/os/Project/OS_Starter_Code/process.out"
+#define PROCESS_EXEC "process.out"
 
 #define SHKEY 300
 
@@ -68,6 +68,13 @@ void destroyClk(bool terminateAll)
     {
         killpg(getpgrp(), SIGINT);
     }
+}
+
+int final_process_sent=0;
+
+void handler_all_processes_sent(int signum){
+    final_process_sent=1; 
+    signal(SIGUSR2,handler_all_processes_sent);
 }
 
 struct processData 
@@ -138,40 +145,44 @@ struct CircularQueue RRqueue={-1,-1};
 // Initialize the circular queue
 
 
-int RRisEmpty() {
-    if(RRqueue.front==-1&&RRqueue.rear==-1) return true;
-    else return false;
+bool RRisEmpty() {
+    return((RRqueue.front==-1)&&(RRqueue.rear==-1));
 }
 
-int RRisFull() {
-    return (RRqueue.rear + 1) % 256 == RRqueue.front;
+bool RRisFull() {
+    return ((RRqueue.rear + 1) % 256) == RRqueue.front;
 }
 
 void RRenqueue(struct processData process) {
     if(RRisEmpty()){
+        //printf("emptyqueue");
         RRqueue.front=0;
         RRqueue.rear=0;
     }
     else if (!RRisFull()) {
+        //printf("Case 2");
         RRqueue.rear = (RRqueue.rear + 1) % 256;
     }
+   // printf("Enquing at: %d\n",RRqueue.rear);
     RRqueue.rrprocesses[RRqueue.rear] = process;
 }
 
 struct processData RRdequeue() {
-    if(RRqueue.front==RRqueue.rear){
-        struct processData process = RRqueue.rrprocesses[RRqueue.front];
-        RRqueue.front=-1;
-        RRqueue.rear=-1;
-        return process;
+    struct processData process={0}; 
+    if(!RRisEmpty()){
+        if(RRqueue.front==RRqueue.rear){
+            //printf("Dequing at %d",RRqueue.front);
+            process= RRqueue.rrprocesses[RRqueue.front];
+            RRqueue.front=-1;
+            RRqueue.rear=-1;
+        }
+        else if(!RRisEmpty()){
+            process = RRqueue.rrprocesses[RRqueue.front];
+            RRqueue.front = (RRqueue.front + 1) % 256;
+        }
     }
-    if (!RRisEmpty()) {
-        struct processData process = RRqueue.rrprocesses[RRqueue.front];
-        RRqueue.front = (RRqueue.front + 1) % 256;
-        return process;
-    }
-    struct processData emptyProcess = {0}; // Return an empty process if queue is empty
-    return emptyProcess;
+    
+    return process;
 }
 
 struct processData RRpeek() {
@@ -183,19 +194,13 @@ struct processData RRpeek() {
     return emptyProcess;
 }
 
-bool dead=false;
+int dead=0;
 
-void handler_rr(int sig_num){
-    struct processData removed=currently_running_rr;
-    printf("Process %d terminated at time %d\n",removed.id,getClk());
-    currently_running_rr=RRdequeue();
-    dead=true;
-    signal (SIGUSR1,handler_rr);
-}
+
 
 void printRRQueue() {
 
-    printf("Queue Size:%d Current Clock: %d\n",RRqueue.front-RRqueue.rear, getClk());
+    printf("Queue Size:%d Current Clock: %d\n",RRqueue.front > RRqueue.rear ? (256 - RRqueue.front + RRqueue.rear + 1) : (RRqueue.rear - RRqueue.front + 1), getClk());
     printf("Current Process Queue:\n");
     printf("ID\tArrival Time\tRunning Time\tPriority\n");
 
@@ -207,7 +212,7 @@ void printRRQueue() {
     printf("Waiting:\n");
     if(RRisEmpty()){}
     else{
-        if(RRqueue.rear>RRqueue.front){
+        if(RRqueue.rear>=RRqueue.front){
             for(int i=RRqueue.front;i<=RRqueue.rear;i++){
                 printf("%d\t%d\t\t%d\t\t%d\n", 
                 RRqueue.rrprocesses[i].id, 
@@ -233,8 +238,17 @@ void printRRQueue() {
             }
         }
     }
+    printf("\n\n");
 }
 
+void handler_rr(int sig_num){
+    struct processData removed=currently_running_rr;
+    //printf("Process %d terminated at time %d\n",removed.id,getClk());
+    currently_running_rr=RRdequeue();
+    dead=1;
+    printRRQueue();
+    signal (SIGUSR1,handler_rr);
+}
 
 ///////////////////////////////////////////////////////SJF PriQ////////////////////////////////////////////////////
 struct processData sjf_priorityQueue[100];
@@ -283,13 +297,6 @@ struct processData sjf_peek() {
 
 struct processData currently_running_sjf;
 
-void handler_sjf(int sig_num){
-    struct processData removed=currently_running_sjf;
-    printf("Process %d terminated at time %d\n",removed.id,getClk());
-    signal (SIGUSR1,handler_sjf);
-    currently_running_sjf=sjf_dequeue();
-}
-
 void printsjfQueue() {
 
     printf("Queue Size:%d Current Clock: %d\n",sjf_queueSize, getClk());
@@ -309,7 +316,18 @@ void printsjfQueue() {
             sjf_priorityQueue[i].runningtime, 
             sjf_priorityQueue[i].priority);
     }
+    printf("\n\n");
 }
+
+void handler_sjf(int sig_num){
+    struct processData removed=currently_running_sjf;
+    //printf("Process %d terminated at time %d\n",removed.id,getClk());
+    signal (SIGUSR1,handler_sjf);
+    currently_running_sjf=sjf_dequeue();
+    printsjfQueue();
+}
+
+
 
 ///////////////////////////////PHPF Priority Queue//////////////////////////////////
 
@@ -320,15 +338,17 @@ int PHPF_PriQSize = 0;
 struct processData currently_running_phpf;
 
 void PHPF_enqueue(struct processData process) {
-    if (PHPF_PriQSize >= 256) return; // Queue is full
+    if(process.id!=0){
+        if (PHPF_PriQSize >= 256) return; // Queue is full
 
-    // Insert process in sorted order based on arrival time
-    int i;
-    for (i = PHPF_PriQSize - 1; (i >= 0 && PHPF_PriQ[i].priority > process.priority); i--) {
-        PHPF_PriQ[i + 1] = PHPF_PriQ[i];
+        // Insert process in sorted order based on arrival time
+        int i;
+        for (i = PHPF_PriQSize - 1; (i >= 0 && PHPF_PriQ[i].priority > process.priority); i--) {
+            PHPF_PriQ[i + 1] = PHPF_PriQ[i];
+        }
+        PHPF_PriQ[i + 1] = process; 
+        PHPF_PriQSize++;
     }
-    PHPF_PriQ[i + 1] = process; 
-    PHPF_PriQSize++;
 }
 
 
@@ -376,12 +396,14 @@ void printPHPFQueue() {
             PHPF_PriQ[i].runningtime, 
             PHPF_PriQ[i].priority);
     }
+    printf("\n\n");
 }
 
 void handler_phpf(int sig_num){
     struct processData removed=currently_running_phpf;
-    printf("Process %d terminated at time %d\n",removed.id,getClk());
+    //printf("Process %d terminated at time %d\n",removed.id,getClk());
     signal (SIGUSR1,handler_phpf);
     currently_running_phpf=removeHighestPriority();
+    printPHPFQueue();
 }
 
