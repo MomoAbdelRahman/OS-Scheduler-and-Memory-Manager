@@ -69,31 +69,57 @@ int main(int argc, char * argv[])
             }
             printPHPFQueue();
         }
+       
     }
     }
     else if(scheduling_type==3){
         //RR
-        printf("ana gowa 1\n");
         int quantum=atoi(argv[2]);
+        printf("%d\n",RRqueue.front);
+        signal (SIGUSR1,handler_rr);
         while(1){
-                received=msgrcv(msgid, &message, sizeof(message.data), 1,IPC_NOWAIT);
-                enqueue(message.data);
-                struct processData currentprocess = dequeue(); 
-                                       
-                currentprocess.runningtime=currentprocess.runningtime- quantum;
+            received=msgrcv(msgid, &message, sizeof(message.data), 1,IPC_NOWAIT);
 
-                enqueue(currentprocess);
-                                 
-                printf("ID:%d\tRemaining Time:%d\n",peek().id,peek().runningtime);
-                //sleep(1);            
+
+            if(received==-1){
+                //continue_process(currently_running_rr);
             }
-
-       
-    }
+            else{
+                int new_pid=new_process(&message);
+                message.data.pid=new_pid;
+                if(RRisEmpty()&&currently_running_rr.id==0){
+                    currently_running_rr=message.data;
+                    printf("%d\n",currently_running_rr.id);
+                }
+                else{
+                    RRenqueue(message.data);
+                    stop_process(message.data);
+                    printf("etlam:%d\n",message.data.id);
+                }
+            }
+            if(currently_running_rr.id!=0){
+                RRenqueue(currently_running_rr);
+                stop_process(currently_running_rr);
+                currently_running_rr=RRdequeue();
+                continue_process(currently_running_rr);
+                for(int i=0;i<quantum;i++){
+                    if(dead){
+                        dead=false;
+                        break;
+                    }
+                    else{
+                        sleep(1);
+                    }
+                }
+                printRRQueue();
+                sleep(2);
+            }
+        }
 
     
     //TODO implement the scheduler :)
     //upon termination release the clock resources
 
     //destroyClk(true);
+    }
 }

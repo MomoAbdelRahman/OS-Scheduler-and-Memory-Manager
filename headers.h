@@ -126,52 +126,116 @@ int continue_process(struct processData p1){
 //////////////////////////////////////////////Circular Queue//////////////////////////////////////////////////////
 
 struct CircularQueue {
-    struct processData rrprocesses[100];
     int front;
     int rear;
+    struct processData rrprocesses[256];
 };
 
-struct CircularQueue queue;
+struct processData currently_running_rr={0};
+
+struct CircularQueue RRqueue={-1,-1};
 
 // Initialize the circular queue
-void initQueue() {
-    queue.front = 0;
-    queue.rear = 0;
+
+
+int RRisEmpty() {
+    if(RRqueue.front==-1&&RRqueue.rear==-1) return true;
+    else return false;
 }
 
-int isEmpty() {
-    return queue.front == queue.rear;
+int RRisFull() {
+    return (RRqueue.rear + 1) % 256 == RRqueue.front;
 }
 
-int isFull() {
-    return (queue.rear + 1) % 100 == queue.front;
-}
-
-void enqueue(struct processData process) {
-    if (!isFull()) {
-        queue.rrprocesses[queue.rear] = process;
-        queue.rear = (queue.rear + 1) % 100;
+void RRenqueue(struct processData process) {
+    if(RRisEmpty()){
+        RRqueue.front=0;
+        RRqueue.rear=0;
     }
+    else if (!RRisFull()) {
+        RRqueue.rear = (RRqueue.rear + 1) % 256;
+    }
+    RRqueue.rrprocesses[RRqueue.rear] = process;
 }
 
-struct processData dequeue() {
-    if (!isEmpty()) {
-        struct processData process = queue.rrprocesses[queue.front];
-        queue.front = (queue.front + 1) % 100;
+struct processData RRdequeue() {
+    if(RRqueue.front==RRqueue.rear){
+        struct processData process = RRqueue.rrprocesses[RRqueue.front];
+        RRqueue.front=-1;
+        RRqueue.rear=-1;
+        return process;
+    }
+    if (!RRisEmpty()) {
+        struct processData process = RRqueue.rrprocesses[RRqueue.front];
+        RRqueue.front = (RRqueue.front + 1) % 256;
         return process;
     }
     struct processData emptyProcess = {0}; // Return an empty process if queue is empty
     return emptyProcess;
 }
 
-struct processData peek() {
-    if (!isEmpty()) {
-        struct processData process = queue.rrprocesses[queue.front];
+struct processData RRpeek() {
+    if (!RRisEmpty()) {
+        struct processData process = RRqueue.rrprocesses[RRqueue.front];
         return process;
     }
     struct processData emptyProcess = {0}; // Return an empty process if queue is empty
     return emptyProcess;
 }
+
+bool dead=false;
+
+void handler_rr(int sig_num){
+    struct processData removed=currently_running_rr;
+    printf("Process %d terminated at time %d\n",removed.id,getClk());
+    currently_running_rr=RRdequeue();
+    dead=true;
+    signal (SIGUSR1,handler_rr);
+}
+
+void printRRQueue() {
+
+    printf("Queue Size:%d Current Clock: %d\n",RRqueue.front-RRqueue.rear, getClk());
+    printf("Current Process Queue:\n");
+    printf("ID\tArrival Time\tRunning Time\tPriority\n");
+
+    printf("Currently Running\n%d\t%d\t\t%d\t\t%d\n", 
+            currently_running_rr.id, 
+            currently_running_rr.arrivaltime, 
+            currently_running_rr.runningtime, 
+            currently_running_rr.priority);
+    printf("Waiting:\n");
+    if(RRisEmpty()){}
+    else{
+        if(RRqueue.rear>RRqueue.front){
+            for(int i=RRqueue.front;i<=RRqueue.rear;i++){
+                printf("%d\t%d\t\t%d\t\t%d\n", 
+                RRqueue.rrprocesses[i].id, 
+                RRqueue.rrprocesses[i].arrivaltime, 
+                RRqueue.rrprocesses[i].runningtime, 
+                RRqueue.rrprocesses[i].priority);
+            }
+        }
+        else{
+            for(int i=RRqueue.front;i<256;i++){
+                printf("%d\t%d\t\t%d\t\t%d\n", 
+                RRqueue.rrprocesses[i].id, 
+                RRqueue.rrprocesses[i].arrivaltime, 
+                RRqueue.rrprocesses[i].runningtime, 
+                RRqueue.rrprocesses[i].priority);
+            }
+            for (int i=0; i<=RRqueue.rear;i++){
+                printf("%d\t%d\t\t%d\t\t%d\n", 
+                RRqueue.rrprocesses[i].id, 
+                RRqueue.rrprocesses[i].arrivaltime, 
+                RRqueue.rrprocesses[i].runningtime, 
+                RRqueue.rrprocesses[i].priority);
+            }
+        }
+    }
+}
+
+
 ///////////////////////////////////////////////////////SJF PriQ////////////////////////////////////////////////////
 struct processData sjf_priorityQueue[100];
 
