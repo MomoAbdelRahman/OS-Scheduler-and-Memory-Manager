@@ -122,6 +122,9 @@ int new_process(struct msgbuff* m1){
     }
 }
 
+
+
+
 int stop_process(struct processData p1){
     kill(p1.pid,SIGSTOP);    
 }
