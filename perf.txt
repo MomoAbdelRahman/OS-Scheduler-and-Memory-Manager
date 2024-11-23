@@ -1,5 +1,5 @@
 Performace Overview
-Average Waiting Time:7.20
-Average WTA:1.80
-Standard Deviation of WTA:0.75
-CPU Utilization:0.87
+CPU Utilization:102 %
+Average WTA:2.40
+Average Waiting Time:20.40
+Standard Deviation of WTA:0.80

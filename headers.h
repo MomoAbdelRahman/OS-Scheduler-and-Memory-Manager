@@ -45,6 +45,9 @@ struct PCB{
     int finishtime;
 };
 struct PCB pcb_arr[256];
+
+struct PCB process_control;
+
 void print_pcb(){
     printf("Current clock: %d\n",getClk());
     for(int i=0;i<256;i++){
@@ -295,7 +298,24 @@ void printRRQueue() {
 void handler_rr(int sig_num){
     struct processData removed=currently_running_rr;
     //printf("Process %d terminated at time %d\n",removed.id,getClk());
+    pcb_arr[removed.id].state="Terminated";
     currently_running_rr=RRdequeue();
+    process_control=pcb_arr[currently_running_rr.id];
+    if(pcb_arr[currently_running_rr.id].processedtime==0){
+        if(process_control.id!=0){
+            pFile = fopen("log.txt", "a");
+            fprintf(pFile,"At time %d process %d started | Arrival time:%d | Total Runtime:%d | Remaining Time:%d | Waiting Time:%d\n",getClk(),process_control.id,process_control.arrivaltime,process_control.total_running_time, process_control.remaining_time,getClk()-process_control.arrivaltime-process_control.processedtime);
+            fclose(pFile);
+        }
+    }
+    else{
+        if(process_control.id!=0){
+            pFile = fopen("log.txt", "a");
+            fprintf(pFile,"At time %d process %d resumed | Arrival time:%d | Total Runtime:%d | Remaining Time:%d | Waiting Time:%d\n",getClk(),process_control.id,process_control.arrivaltime,process_control.total_running_time, process_control.remaining_time,getClk()-process_control.arrivaltime-process_control.processedtime);
+            fclose(pFile);
+        }
+    }
+    pcb_arr[currently_running_rr.id].state="Running";
     dead=1;
     printRRQueue();
     //print_pcb();
@@ -376,7 +396,24 @@ void handler_sjf(int sig_num){
     struct processData removed=currently_running_sjf;
     //printf("Process %d terminated at time %d\n",removed.id,getClk());
     signal (SIGUSR1,handler_sjf);
+    pcb_arr[removed.id].state="Terminated";
     currently_running_sjf=sjf_dequeue();
+    process_control=pcb_arr[currently_running_sjf.id];
+    if(process_control.processedtime==0){
+        if(process_control.id!=0){
+            pFile = fopen("log.txt", "a");
+            fprintf(pFile,"At time %d process %d started | Arrival time:%d | Total Runtime:%d | Remaining Time:%d | Waiting Time:%d\n",getClk(),process_control.id,process_control.arrivaltime,process_control.total_running_time, process_control.remaining_time,getClk()-process_control.arrivaltime-process_control.processedtime);
+            fclose(pFile);
+        }
+    }
+    else{
+        if(process_control.id!=0){
+            pFile = fopen("log.txt", "a");
+            fprintf(pFile,"At time %d process %d resumed | Arrival time:%d | Total Runtime:%d | Remaining Time:%d | Waiting Time:%d\n",getClk(),process_control.id,process_control.arrivaltime,process_control.total_running_time, process_control.remaining_time,getClk()-process_control.arrivaltime-process_control.processedtime);
+            fclose(pFile);
+        }
+    }
+    pcb_arr[currently_running_sjf.id].state="Running";
     printsjfQueue();
 }
 
@@ -455,8 +492,25 @@ void printPHPFQueue() {
 void handler_phpf(int sig_num){
     struct processData removed=currently_running_phpf;
     //printf("Process %d terminated at time %d\n",removed.id,getClk());
+    pcb_arr[removed.id].state="Terminated";
     signal (SIGUSR1,handler_phpf);
     currently_running_phpf=removeHighestPriority();
+    process_control=pcb_arr[currently_running_phpf.id];
+    if(process_control.processedtime==0){
+        if(process_control.id!=0){
+            pFile = fopen("log.txt", "a");
+            fprintf(pFile,"At time %d process %d started | Arrival time:%d | Total Runtime:%d | Remaining Time:%d | Waiting Time:%d\n",getClk(),process_control.id,process_control.arrivaltime,process_control.total_running_time, process_control.remaining_time,getClk()-process_control.arrivaltime-process_control.processedtime);
+            fclose(pFile);
+        }
+    }
+    else{
+        if(process_control.id!=0){
+            pFile = fopen("log.txt", "a");
+            fprintf(pFile,"At time %d process %d resumed | Arrival time:%d | Total Runtime:%d | Remaining Time:%d | Waiting Time:%d\n",getClk(),process_control.id,process_control.arrivaltime,process_control.total_running_time, process_control.remaining_time,getClk()-process_control.arrivaltime-process_control.processedtime);
+            fclose(pFile);
+        }
+    }
+    pcb_arr[currently_running_phpf.id].state="Running";
     printPHPFQueue();
 }
 

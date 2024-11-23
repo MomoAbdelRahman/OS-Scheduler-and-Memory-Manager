@@ -213,6 +213,7 @@ int main(int argc, char * argv[])
       
         // 7. Clear clock resources
         destroyClk(true);
+        msgctl(msgid, IPC_RMID, (struct msqid_ds *)0);
         }
     }
 }
