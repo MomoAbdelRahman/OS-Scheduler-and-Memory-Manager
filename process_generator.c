@@ -207,9 +207,6 @@ int main(int argc, char * argv[])
         spid=wait(&status);
         if(WIFEXITED(status)){
             printf("Scheduler has terminated with exit code: %d\n",status);
-            perf=fopen("perf.txt","a");
-            fprintf(perf,"AVG WTA: %.2f\nAvg Waiting: %.2f\n",total_WTA/count,1.0*total_waiting/count);
-            fclose(perf);
         }
 
         

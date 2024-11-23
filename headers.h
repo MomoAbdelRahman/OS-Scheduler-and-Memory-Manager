@@ -42,7 +42,25 @@ struct PCB{
     int remaining_time;
     int priority;
     int processedtime;
+    int finishtime;
 };
+struct PCB pcb_arr[256];
+void print_pcb(){
+    printf("Current clock: %d\n",getClk());
+    for(int i=0;i<256;i++){
+        if(pcb_arr[i].id!=0){
+            printf("ID:%d\n",pcb_arr[i].id);
+            printf("Arrival Time:%d\n",pcb_arr[i].arrivaltime);
+            printf("Priority:%d\n",pcb_arr[i].priority);
+            printf("Total Running Time:%d\n",pcb_arr[i].total_running_time);
+            printf("Remaining Time:%d\n",pcb_arr[i].remaining_time);
+            printf("Processed Time:%d\n",pcb_arr[i].processedtime);
+            printf("Finish Time:%d\n\n",pcb_arr[i].finishtime);
+
+        }
+    }
+}
+
 
 /*
  * All process call this function at the beginning to establish communication between them and the clock module.
@@ -150,11 +168,11 @@ int new_process(struct msgbuff* m1){
 
 
 int stop_process(struct processData p1){
-    kill(p1.pid,SIGSTOP);   
+    return(kill(p1.pid,SIGSTOP)); 
 }
 
 int continue_process(struct processData p1){
-    kill(p1.pid,SIGCONT);
+    return(kill(p1.pid,SIGCONT));
 }
 
 
@@ -271,6 +289,7 @@ void printRRQueue() {
         }
     }
     printf("\n\n");
+    //print_pcb();
 }
 
 void handler_rr(int sig_num){
@@ -279,6 +298,7 @@ void handler_rr(int sig_num){
     currently_running_rr=RRdequeue();
     dead=1;
     printRRQueue();
+    //print_pcb();
     signal (SIGUSR1,handler_rr);
 }
 

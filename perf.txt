@@ -1,3 +1,5 @@
 Performace Overview
-AVG WTA: 0.00
-Avg Waiting: 0.00
+Average Waiting Time:7.20
+Average WTA:1.80
+Standard Deviation of WTA:0.75
+CPU Utilization:0.87

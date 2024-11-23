@@ -1,11 +1,11 @@
 Log
-At time 10 process 1 started | Arrival time:9 | Total Runtime:8 | Remaining Time:8 | Waiting Time:1
-At time 18 process 1 finished | Arrival time:9 | Total Runtime:8 | Remaining Time:0 | Waiting Time:1 | TA Time:9 | WTA: 1.00
-At time 18 process 2 started | Arrival time:9 | Total Runtime:0 | Remaining Time:0 | Waiting Time:9
-At time 18 process 2 finished | Arrival time:9 | Total Runtime:0 | Remaining Time:0 | Waiting Time:9 | TA Time:9 | WTA: 0.00
-At time 19 process 3 started | Arrival time:18 | Total Runtime:11 | Remaining Time:11 | Waiting Time:1
-At time 30 process 3 finished | Arrival time:18 | Total Runtime:11 | Remaining Time:0 | Waiting Time:1 | TA Time:12 | WTA: 1.00
-At time 30 process 4 started | Arrival time:21 | Total Runtime:10 | Remaining Time:10 | Waiting Time:9
-At time 40 process 4 finished | Arrival time:21 | Total Runtime:10 | Remaining Time:0 | Waiting Time:9 | TA Time:19 | WTA: 1.00
-At time 40 process 5 started | Arrival time:30 | Total Runtime:2 | Remaining Time:2 | Waiting Time:10
-At time 42 process 5 finished | Arrival time:30 | Total Runtime:2 | Remaining Time:0 | Waiting Time:10 | TA Time:12 | WTA: 6.00
+At time 9 process 1 started | Arrival time:8 | Total Runtime:11 | Remaining Time:11 | Waiting Time:1
+At time 18 process 2 started | Arrival time:16 | Total Runtime:1 | Remaining Time:1 | Waiting Time:2
+At time 19 process 2 finished | Arrival time:16 | Total Runtime:1 | Remaining Time:0 | Waiting Time:2 | TA Time:3 | WTA: 3.00 | Processed Time:1
+At time 19 process 3 started | Arrival time:18 | Total Runtime:5 | Remaining Time:5 | Waiting Time:1
+At time 24 process 1 finished | Arrival time:8 | Total Runtime:11 | Remaining Time:0 | Waiting Time:5 | TA Time:16 | WTA: 1.00 | Processed Time:11
+At time 24 process 4 started | Arrival time:19 | Total Runtime:21 | Remaining Time:21 | Waiting Time:5
+At time 29 process 3 finished | Arrival time:18 | Total Runtime:5 | Remaining Time:0 | Waiting Time:6 | TA Time:11 | WTA: 2.00 | Processed Time:5
+At time 29 process 5 started | Arrival time:25 | Total Runtime:9 | Remaining Time:9 | Waiting Time:4
+At time 43 process 5 finished | Arrival time:25 | Total Runtime:9 | Remaining Time:0 | Waiting Time:9 | TA Time:18 | WTA: 2.00 | Processed Time:9
+At time 54 process 4 finished | Arrival time:19 | Total Runtime:21 | Remaining Time:0 | Waiting Time:14 | TA Time:35 | WTA: 1.00 | Processed Time:21
