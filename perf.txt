@@ -1,1 +1,3 @@
 Performace Overview
+AVG WTA: 0.00
+Avg Waiting: 0.00

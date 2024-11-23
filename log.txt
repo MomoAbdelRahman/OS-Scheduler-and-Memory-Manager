@@ -1,4 +1,11 @@
 Log
-At time 12 process 1 started | Arrival time:11 | Total Runtime:6 | Remaining Time:6 | Waiting Time:1
-At time 18 process 1 finished | Arrival time:11 | Total Runtime:6 | Remaining Time:0 | Waiting Time:1 | TA Time:7 | WTA: 1.00
-At time 18 process 2 started | Arrival time:14 | Total Runtime:17 | Remaining Time:17 | Waiting Time:4
+At time 10 process 1 started | Arrival time:9 | Total Runtime:8 | Remaining Time:8 | Waiting Time:1
+At time 18 process 1 finished | Arrival time:9 | Total Runtime:8 | Remaining Time:0 | Waiting Time:1 | TA Time:9 | WTA: 1.00
+At time 18 process 2 started | Arrival time:9 | Total Runtime:0 | Remaining Time:0 | Waiting Time:9
+At time 18 process 2 finished | Arrival time:9 | Total Runtime:0 | Remaining Time:0 | Waiting Time:9 | TA Time:9 | WTA: 0.00
+At time 19 process 3 started | Arrival time:18 | Total Runtime:11 | Remaining Time:11 | Waiting Time:1
+At time 30 process 3 finished | Arrival time:18 | Total Runtime:11 | Remaining Time:0 | Waiting Time:1 | TA Time:12 | WTA: 1.00
+At time 30 process 4 started | Arrival time:21 | Total Runtime:10 | Remaining Time:10 | Waiting Time:9
+At time 40 process 4 finished | Arrival time:21 | Total Runtime:10 | Remaining Time:0 | Waiting Time:9 | TA Time:19 | WTA: 1.00
+At time 40 process 5 started | Arrival time:30 | Total Runtime:2 | Remaining Time:2 | Waiting Time:10
+At time 42 process 5 finished | Arrival time:30 | Total Runtime:2 | Remaining Time:0 | Waiting Time:10 | TA Time:12 | WTA: 6.00

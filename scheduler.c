@@ -22,7 +22,7 @@ int main(int argc, char * argv[])
     int scheduling_type=atoi(argv[1]);
 
     key_t idsp;
-    idsp = ftok("keyfile2",2);
+    idsp = ftok("keyfile2",getpid());
     int msgidsp, receivedsp;
     msgidsp=msgget(idsp, 0666|IPC_CREAT);
     if(msgidsp==-1){
@@ -57,15 +57,12 @@ int main(int argc, char * argv[])
                 }
                 printsjfQueue();
             }
-            receivedsp=msgrcv(msgidsp, &messagesp, sizeof(messagesp.exit), 2,IPC_NOWAIT);
+            receivedsp=msgrcv(msgidsp, &messagesp, sizeof(messagesp.exit), getpid(),IPC_NOWAIT);
             if(receivedsp==-1){
-               //perror("couldnt receive");
+               //perror("couldnt receive\n");
             }
             else{ 
                 pcb_arr[messagesp.exit.id]=messagesp.exit;
-                for(int i=0;i<5;i++){
-                    printf("Proccess %d is currently running with proccessed time%d\n",pcb_arr->id,pcb_arr->processedtime);
-                }
             }
         }
     }
@@ -93,11 +90,11 @@ int main(int argc, char * argv[])
                 }
                 printPHPFQueue();
             }
-            receivedsp=msgrcv(msgidsp, &messagesp, sizeof(messagesp.exit), 1,IPC_NOWAIT);
+            receivedsp=msgrcv(msgidsp, &messagesp, sizeof(messagesp.exit), getpid(),IPC_NOWAIT);
             if(receivedsp==-1){
-                //continue_process(currently_running_phpf);
+               //perror("couldnt receive\n");
             }
-            else{  
+            else{ 
                 pcb_arr[messagesp.exit.id]=messagesp.exit;
             }
         }
@@ -149,11 +146,11 @@ int main(int argc, char * argv[])
                 
                 //sleep(2);
             }
-            receivedsp=msgrcv(msgidsp, &messagesp, sizeof(messagesp.exit), 1,IPC_NOWAIT);
+            receivedsp=msgrcv(msgidsp, &messagesp, sizeof(messagesp.exit), getpid(),IPC_NOWAIT);
             if(receivedsp==-1){
-                //continue_process(currently_running_phpf);
+               //perror("couldnt receive\n");
             }
-            else{  
+            else{ 
                 pcb_arr[messagesp.exit.id]=messagesp.exit;
             }
         }

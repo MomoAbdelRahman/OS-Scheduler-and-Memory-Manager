@@ -26,11 +26,11 @@ int main(int agrc, char * argv[])
     fclose(pFile);
     
     struct exitcode pcbbuff;
-    key_t MSGQID;
-    pcbbuff.mtype=2;
+    key_t key;
+    pcbbuff.mtype=getppid();
     int msgqid,sent;
-    MSGQID=ftok("keyfile",2);
-    msgqid=msgget(MSGQID,0666|IPC_CREAT);
+    key=ftok("keyfile2",getppid());
+    msgqid=msgget(key,0666|IPC_CREAT);
     if(msgqid==-1){
         perror("Couldnt get PCB Message Queue");
     }
@@ -44,15 +44,15 @@ int main(int agrc, char * argv[])
         current=getClk();
         process_control.remaining_time = process_control.total_running_time-process_control.processedtime;
         pcbbuff.exit=process_control;
-    }
-    sent=msgsnd(msgqid,&pcbbuff,sizeof(pcbbuff.exit),IPC_NOWAIT);
+        sent=msgsnd(msgqid,&pcbbuff,sizeof(pcbbuff.exit),IPC_NOWAIT);
         if(sent==-1){
             perror("Couldnt send PCB\n");
         }
         else{
             printf("PCB Sent\n");
         }
-        printf("I am here\n");
+    }
+    
     pFile = fopen("log.txt", "a");
     int TA_time=getClk()-process_control.arrivaltime;
     float WTA;

@@ -90,8 +90,8 @@ void initializer(){
 }
 
 struct exitcode{
+    long mtype;
     struct PCB exit;
-    int mtype;
 };
 
 
@@ -319,6 +319,7 @@ struct processData sjf_dequeue() {
     sjf_queueSize--; // Decrease the queue size
     return earliestProcess; // Return the first process
 }
+
 struct processData sjf_peek() {
     if (sjf_queueSize == 0) {
         struct processData emptyProcess = {0}; // Return an empty process
