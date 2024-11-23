@@ -89,7 +89,10 @@ void initializer(){
     total_waiting=0;
 }
 
-
+struct exitcode{
+    struct PCB exit;
+    int mtype;
+};
 
 
 

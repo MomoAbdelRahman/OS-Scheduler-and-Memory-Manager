@@ -20,6 +20,15 @@ int main(int argc, char * argv[])
     }
     struct msgbuff message;
     int scheduling_type=atoi(argv[1]);
+
+    key_t idsp;
+    idsp = ftok("keyfile2",2);
+    int msgidsp, receivedsp;
+    msgidsp=msgget(idsp, 0666|IPC_CREAT);
+    if(msgidsp==-1){
+        perror("error in creating message queue between scheduler and process (in scheduler)");
+    }
+    struct exitcode messagesp;
     
 
     //SJF
@@ -48,6 +57,13 @@ int main(int argc, char * argv[])
                 }
                 printsjfQueue();
             }
+            received=msgrcv(msgidsp, &messagesp, sizeof(messagesp.exit), 1,IPC_NOWAIT);
+            if(received==-1){
+                continue_process(currently_running_phpf);
+            }
+            else{  
+                pcb_arr[messagesp.exit.id]=messagesp.exit;
+            }
         }
     }
     //PHPF
@@ -73,6 +89,13 @@ int main(int argc, char * argv[])
                     continue_process(currently_running_phpf);
                 }
                 printPHPFQueue();
+            }
+            received=msgrcv(msgidsp, &messagesp, sizeof(messagesp.exit), 1,IPC_NOWAIT);
+            if(received==-1){
+                continue_process(currently_running_phpf);
+            }
+            else{  
+                pcb_arr[messagesp.exit.id]=messagesp.exit;
             }
         }
     }
@@ -123,7 +146,13 @@ int main(int argc, char * argv[])
                 
                 //sleep(2);
             }
-            
+            received=msgrcv(msgidsp, &messagesp, sizeof(messagesp.exit), 1,IPC_NOWAIT);
+            if(received==-1){
+                continue_process(currently_running_phpf);
+            }
+            else{  
+                pcb_arr[messagesp.exit.id]=messagesp.exit;
+            }
         }
     }
     //TODO implement the scheduler :)
