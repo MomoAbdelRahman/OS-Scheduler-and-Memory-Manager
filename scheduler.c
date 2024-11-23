@@ -57,12 +57,15 @@ int main(int argc, char * argv[])
                 }
                 printsjfQueue();
             }
-            received=msgrcv(msgidsp, &messagesp, sizeof(messagesp.exit), 1,IPC_NOWAIT);
-            if(received==-1){
-                continue_process(currently_running_phpf);
+            receivedsp=msgrcv(msgidsp, &messagesp, sizeof(messagesp.exit), 2,IPC_NOWAIT);
+            if(receivedsp==-1){
+               //perror("couldnt receive");
             }
-            else{  
+            else{ 
                 pcb_arr[messagesp.exit.id]=messagesp.exit;
+                for(int i=0;i<5;i++){
+                    printf("Proccess %d is currently running with proccessed time%d\n",pcb_arr->id,pcb_arr->processedtime);
+                }
             }
         }
     }
@@ -90,9 +93,9 @@ int main(int argc, char * argv[])
                 }
                 printPHPFQueue();
             }
-            received=msgrcv(msgidsp, &messagesp, sizeof(messagesp.exit), 1,IPC_NOWAIT);
-            if(received==-1){
-                continue_process(currently_running_phpf);
+            receivedsp=msgrcv(msgidsp, &messagesp, sizeof(messagesp.exit), 1,IPC_NOWAIT);
+            if(receivedsp==-1){
+                //continue_process(currently_running_phpf);
             }
             else{  
                 pcb_arr[messagesp.exit.id]=messagesp.exit;
@@ -146,9 +149,9 @@ int main(int argc, char * argv[])
                 
                 //sleep(2);
             }
-            received=msgrcv(msgidsp, &messagesp, sizeof(messagesp.exit), 1,IPC_NOWAIT);
-            if(received==-1){
-                continue_process(currently_running_phpf);
+            receivedsp=msgrcv(msgidsp, &messagesp, sizeof(messagesp.exit), 1,IPC_NOWAIT);
+            if(receivedsp==-1){
+                //continue_process(currently_running_phpf);
             }
             else{  
                 pcb_arr[messagesp.exit.id]=messagesp.exit;

@@ -1,15 +1,7 @@
 #include "headers.h"
 
 /* Modify this file as needed*/
-struct PCB{
-    int id;
-    char* state;
-    int arrivaltime;
-    int total_running_time;
-    int remaining_time;
-    int priority;
-    int processedtime;
-};
+
 struct PCB process_control;
 
 
@@ -35,7 +27,7 @@ int main(int agrc, char * argv[])
     
     struct exitcode pcbbuff;
     key_t MSGQID;
-    pcbbuff.mtype=getppid();
+    pcbbuff.mtype=2;
     int msgqid,sent;
     MSGQID=ftok("keyfile",2);
     msgqid=msgget(MSGQID,0666|IPC_CREAT);
@@ -52,11 +44,15 @@ int main(int agrc, char * argv[])
         current=getClk();
         process_control.remaining_time = process_control.total_running_time-process_control.processedtime;
         pcbbuff.exit=process_control;
-        sent=msgsnd(msgqid,&pcbbuff,sizeof(pcbbuff.exit),IPC_NOWAIT);
-        if(sent==-1){
-            perror("Couldnt send PCB");
-        }
     }
+    sent=msgsnd(msgqid,&pcbbuff,sizeof(pcbbuff.exit),IPC_NOWAIT);
+        if(sent==-1){
+            perror("Couldnt send PCB\n");
+        }
+        else{
+            printf("PCB Sent\n");
+        }
+        printf("I am here\n");
     pFile = fopen("log.txt", "a");
     int TA_time=getClk()-process_control.arrivaltime;
     float WTA;
