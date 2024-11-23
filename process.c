@@ -11,14 +11,16 @@ struct PCB{
     int processedtime;
 };
 struct PCB process_control;
-FILE * pFile;
 
+struct exitcode{
+    int waiting_time;
+    int mtype;
+};
 
 
 bool running=0;
 int main(int agrc, char * argv[])
 {
-   
     process_control.processedtime=0;
     initClk();
     process_control.id=atoi(argv[1]);
@@ -32,6 +34,7 @@ int main(int agrc, char * argv[])
     
     pFile = fopen("log.txt", "a");
     fprintf(pFile,"At time %d process %d started | Arrival time:%d | Total Runtime:%d | Remaining Time:%d | Waiting Time:%d\n",getClk(),process_control.id,process_control.arrivaltime,process_control.total_running_time, process_control.remaining_time,getClk()-process_control.arrivaltime-process_control.processedtime);
+    fclose(pFile);
     while (process_control.remaining_time > 0)
     {
         current=getClk();
@@ -40,9 +43,24 @@ int main(int agrc, char * argv[])
         current=getClk();
         process_control.remaining_time = process_control.total_running_time-process_control.processedtime;
     }
+    pFile = fopen("log.txt", "a");
+    int TA_time=getClk()-process_control.arrivaltime;
+    float WTA;
+    if(process_control.total_running_time==0){
+        WTA=0;
+    }
+    else{
+        WTA=TA_time/process_control.total_running_time;
+    }
+    int waiting_time=getClk()-process_control.arrivaltime-process_control.processedtime;
+    fprintf(pFile,"At time %d process %d finished | Arrival time:%d | Total Runtime:%d | Remaining Time:%d | Waiting Time:%d | TA Time:%d | WTA: %.2f\n",getClk(),process_control.id,process_control.arrivaltime,process_control.total_running_time, process_control.remaining_time,waiting_time, TA_time,WTA);
+    fclose(pFile);
+    printf("Waiting Time:%d\n",waiting_time);
+    total_waiting=total_waiting+waiting_time;
+    printf("Total Waiting Time:%d\n",total_waiting);
+    //printf("Waiting TIme:%d",getClk()-process_control.arrivaltime-process_control.processedtime);
     kill(getppid(),SIGUSR1);
     exit(0);
-    fprintf(pFile,"At time %d process %d finished | Arrival time:%d | Total Runtime:%d | Remaining Time:%d | Waiting Time:%d | TA Time:%d | WTA: %d\n",getClk(),process_control.id,process_control.arrivaltime,process_control.total_running_time, process_control.remaining_time,getClk()-process_control.arrivaltime-process_control.processedtime, getClk()-process_control.arrivaltime,(getClk()-process_control.arrivaltime)/process_control.total_running_time);
 
     
     destroyClk(false);

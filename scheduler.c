@@ -2,8 +2,6 @@
 
 
 
-
-
 int main(int argc, char * argv[])
 {
     signal(SIGUSR2,handler_all_processes_sent);
@@ -19,6 +17,7 @@ int main(int argc, char * argv[])
     struct msgbuff message;
     int scheduling_type=atoi(argv[1]);
     
+
     //SJF
     if(scheduling_type==1){
         signal (SIGUSR1,handler_sjf);
@@ -27,6 +26,9 @@ int main(int argc, char * argv[])
             if(received==-1){
                 //printf("Continuing Process");
                 continue_process(currently_running_sjf);
+                
+                
+
                 //printf("Didnt Receive Data from Process generator");
             }
             else{
@@ -123,5 +125,6 @@ int main(int argc, char * argv[])
     //TODO implement the scheduler :)
     //upon termination release the clock resources
     printf("Terminating Scheduler\n");
-    destroyClk(true);
+    //destroyClk(true);
+    exit(0);
 }

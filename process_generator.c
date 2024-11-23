@@ -159,8 +159,14 @@ int main(int argc, char * argv[])
 
         // TODO Generation Main Loop
         // 5. Create a data structure for processes and provide it with its parameters.
-
+        pFile=fopen("log.txt","w");
+        fprintf(pFile,"Log\n");
+        fclose(pFile);
+        perf=fopen("perf.txt","w");
+        fprintf(perf,"Performace Overview\n");
+        fclose(perf);
         // 6. Send the information to the scheduler at the appropriate time.
+        int count=0;
         key_t id;
         id=ftok("keyfile",1);
         int msgid, sent;
@@ -189,6 +195,7 @@ int main(int argc, char * argv[])
                     perror("Error in send process data from process generator");
                 }
                 else{
+                    count++;
                     //printf("message sent");
                 }
 
@@ -199,15 +206,17 @@ int main(int argc, char * argv[])
         spid=wait(&status);
         if(WIFEXITED(status)){
             printf("Scheduler has terminated with exit code: %d\n",status);
+            perf=fopen("perf.txt","a");
+            fprintf(perf,"AVG WTA: %.2f\nAvg Waiting: %.2f\n",total_WTA/count,1.0*total_waiting/count);
+            fclose(perf);
         }
 
+        
+      
         // 7. Clear clock resources
         destroyClk(true);
         }
-        
     }
-
-
 }
 
 void clearResources(int signum)

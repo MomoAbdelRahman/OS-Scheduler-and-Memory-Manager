@@ -72,6 +72,10 @@ void destroyClk(bool terminateAll)
 
 int final_process_sent=0;
 
+float total_WTA=0;
+int total_waiting=0;
+
+
 void handler_all_processes_sent(int signum){
     final_process_sent=1; 
     signal(SIGUSR2,handler_all_processes_sent);
@@ -126,12 +130,16 @@ int new_process(struct msgbuff* m1){
 
 
 int stop_process(struct processData p1){
-    kill(p1.pid,SIGSTOP);    
+    kill(p1.pid,SIGSTOP);   
 }
 
 int continue_process(struct processData p1){
     kill(p1.pid,SIGCONT);
 }
+
+
+FILE * pFile;
+FILE* perf;
 
 //////////////////////////////////////////////Circular Queue//////////////////////////////////////////////////////
 
@@ -267,7 +275,7 @@ void sjf_enqueue(struct processData process) {
     for (i = sjf_queueSize - 1; (i >= 0 && sjf_priorityQueue[i].runningtime > process.runningtime); i--) {
         sjf_priorityQueue[i + 1] = sjf_priorityQueue[i];
     }
-    printf("%d\n",process.id);
+    //printf("%d\n",process.id);
     sjf_priorityQueue[i + 1] = process; 
     sjf_queueSize++;
 }
