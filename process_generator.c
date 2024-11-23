@@ -150,6 +150,7 @@ int main(int argc, char * argv[])
 
         // 4. Use this function after creating the clock process to initialize clock
         initClk();
+        initializer();
         sleep(1);
         
         // To get time use this

@@ -34,6 +34,15 @@ int getClk()
     return *shmaddr;
 }
 
+struct PCB{
+    int id;
+    char* state;
+    int arrivaltime;
+    int total_running_time;
+    int remaining_time;
+    int priority;
+    int processedtime;
+};
 
 /*
  * All process call this function at the beginning to establish communication between them and the clock module.
@@ -72,8 +81,16 @@ void destroyClk(bool terminateAll)
 
 int final_process_sent=0;
 
-float total_WTA=0;
-int total_waiting=0;
+float total_WTA;
+int total_waiting;
+
+void initializer(){
+    total_WTA=0;
+    total_waiting=0;
+}
+
+
+
 
 
 void handler_all_processes_sent(int signum){
@@ -140,6 +157,7 @@ int continue_process(struct processData p1){
 
 FILE * pFile;
 FILE* perf;
+FILE* waiting_times_buffer;
 
 //////////////////////////////////////////////Circular Queue//////////////////////////////////////////////////////
 

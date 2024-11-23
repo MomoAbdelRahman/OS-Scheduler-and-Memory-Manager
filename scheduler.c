@@ -1,5 +1,6 @@
 #include "headers.h"
 
+struct PCB pcb_arr[256];
 
 
 int main(int argc, char * argv[])
@@ -7,6 +8,9 @@ int main(int argc, char * argv[])
     signal(SIGUSR2,handler_all_processes_sent);
     //printf("Scheduling type:%s\nQuantum:%s\n",argv[1],argv[2]);
     initClk();
+    for(int i=0;i<256;i++){
+        pcb_arr->id=0;
+    }
     key_t id;
     id = ftok("keyfile",1);
     int msgid, received;

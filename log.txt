@@ -1,9 +1,11 @@
 Log
-At time 7 process 1 started | Arrival time:6 | Total Runtime:6 | Remaining Time:6 | Waiting Time:1
-At time 13 process 1 finished | Arrival time:6 | Total Runtime:6 | Remaining Time:0 | Waiting Time:1 | TA Time:7 | WTA: 1.00
-At time 13 process 2 started | Arrival time:9 | Total Runtime:14 | Remaining Time:14 | Waiting Time:4
-At time 27 process 2 finished | Arrival time:9 | Total Runtime:14 | Remaining Time:0 | Waiting Time:4 | TA Time:18 | WTA: 1.00
-At time 27 process 4 started | Arrival time:26 | Total Runtime:9 | Remaining Time:9 | Waiting Time:1
-At time 36 process 4 finished | Arrival time:26 | Total Runtime:9 | Remaining Time:0 | Waiting Time:1 | TA Time:10 | WTA: 1.00
-At time 36 process 5 started | Arrival time:32 | Total Runtime:12 | Remaining Time:12 | Waiting Time:4
-At time 42 process 3 finished | Arrival time:15 | Total Runtime:11 | Remaining Time:0 | Waiting Time:16 | TA Time:27 | WTA: 2.00
+At time 5 process 1 started | Arrival time:4 | Total Runtime:28 | Remaining Time:28 | Waiting Time:1
+At time 33 process 1 finished | Arrival time:4 | Total Runtime:28 | Remaining Time:0 | Waiting Time:1 | TA Time:29 | WTA: 1.00
+At time 33 process 2 started | Arrival time:13 | Total Runtime:5 | Remaining Time:5 | Waiting Time:20
+At time 38 process 2 finished | Arrival time:13 | Total Runtime:5 | Remaining Time:0 | Waiting Time:20 | TA Time:25 | WTA: 5.00
+At time 38 process 3 started | Arrival time:13 | Total Runtime:6 | Remaining Time:6 | Waiting Time:25
+At time 44 process 3 finished | Arrival time:13 | Total Runtime:6 | Remaining Time:0 | Waiting Time:25 | TA Time:31 | WTA: 5.00
+At time 44 process 5 started | Arrival time:21 | Total Runtime:8 | Remaining Time:8 | Waiting Time:23
+At time 50 process 5 finished | Arrival time:31 | Total Runtime:7 | Remaining Time:0 | Waiting Time:12 | TA Time:19 | WTA: 2.00
+At time 52 process 5 finished | Arrival time:21 | Total Runtime:8 | Remaining Time:0 | Waiting Time:23 | TA Time:31 | WTA: 3.00
+At time 52 process 4 started | Arrival time:14 | Total Runtime:25 | Remaining Time:25 | Waiting Time:38

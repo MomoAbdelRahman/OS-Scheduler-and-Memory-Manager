@@ -10,10 +10,11 @@ struct PCB{
     int priority;
     int processedtime;
 };
+
 struct PCB process_control;
 
 struct exitcode{
-    int waiting_time;
+    struct PCB exit;
     int mtype;
 };
 
@@ -56,12 +57,11 @@ int main(int agrc, char * argv[])
     fprintf(pFile,"At time %d process %d finished | Arrival time:%d | Total Runtime:%d | Remaining Time:%d | Waiting Time:%d | TA Time:%d | WTA: %.2f\n",getClk(),process_control.id,process_control.arrivaltime,process_control.total_running_time, process_control.remaining_time,waiting_time, TA_time,WTA);
     fclose(pFile);
     printf("Waiting Time:%d\n",waiting_time);
-    total_waiting=total_waiting+waiting_time;
-    printf("Total Waiting Time:%d\n",total_waiting);
+    //total_waiting=total_waiting+waiting_time;
+    //printf("Total Waiting Time:%d\n",total_waiting);
     //printf("Waiting TIme:%d",getClk()-process_control.arrivaltime-process_control.processedtime);
     kill(getppid(),SIGUSR1);
     exit(0);
-
     
     destroyClk(false);
     
