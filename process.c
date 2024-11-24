@@ -82,6 +82,9 @@ int main(int agrc, char * argv[])
     exit(0);
 
     destroyClk(false);
-    
+    if(msgctl(msgqid, IPC_RMID, (struct msqid_ds *)0)){
+        perror("Error in removing message queue in process");
+    }
+
     return 0;
 }

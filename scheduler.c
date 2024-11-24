@@ -312,8 +312,13 @@ int main(int argc, char * argv[])
     //TODO implement the scheduler :)
     //upon termination release the clock resources
     printf("Terminating Scheduler\n");
-    msgctl(msgid, IPC_RMID, (struct msqid_ds *)0);
-    msgctl(msgidsp, IPC_RMID, (struct msqid_ds *)0);
+    if(msgctl(msgid, IPC_RMID, (struct msqid_ds *)0)==-1){
+        perror("Error in removing message queue in scheduler with process generator");
+    }
+    if(msgctl(msgidsp, IPC_RMID, (struct msqid_ds *)0)){
+        perror("Error in removing message queue in scheduler with process");
+    }
+    
 
     //destroyClk(true);
     exit(0);

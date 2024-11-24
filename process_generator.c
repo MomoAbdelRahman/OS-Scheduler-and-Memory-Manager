@@ -213,7 +213,9 @@ int main(int argc, char * argv[])
       
         // 7. Clear clock resources
         destroyClk(true);
-        msgctl(msgid, IPC_RMID, (struct msqid_ds *)0);
+        if(msgctl(msgid, IPC_RMID, (struct msqid_ds *)0)==-1){
+            perror("Error in removing message queue in process generator");
+        }
         }
     }
 }
